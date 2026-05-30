@@ -21,9 +21,9 @@ export const Footer = () => {
               Akash Bhadange
             </LinkPreview>
             .{" "}
-            <LinkPreview url="https://github.com/hrushabhkale/hrushabkale">
+            {/* <LinkPreview url="https://github.com/hrushabhkale/hrushabkale">
               Source
-            </LinkPreview>
+            </LinkPreview> */}
             .
           </p>
         </div>

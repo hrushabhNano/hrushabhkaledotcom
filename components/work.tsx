@@ -74,9 +74,8 @@ export const Work = () => {
               >
                 {item.icon}
               </div>
-              <div className="flex flex-1 flex-col md:flex-row md:items-center md:gap-2">
-                <span className="text-foreground font-medium">{item.name}</span>
-                <span className="hidden size-1 rounded-full bg-neutral-300 md:block dark:bg-neutral-700"></span>
+              <div className="flex flex-1 flex-col md:grid md:grid-cols-[220px_1fr] md:items-center md:gap-4">
+                <span className="text-foreground font-medium leading-snug">{item.name}</span>
                 <span className="text-foreground/70 text-sm leading-relaxed">
                   {item.description}
                 </span>

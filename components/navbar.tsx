@@ -19,8 +19,9 @@ function isActivePath(pathname: string, href: string) {
 
 const links = [
   { title: "Home", href: "/" },
-  { title: "Writing", href: "/blog" },
+  { title: "Blog", href: "/blog" },
   { title: "Uses", href: "/uses" },
+  { title: "Favorites", href: "/favorites" },
 ];
 
 export const Navbar = () => {

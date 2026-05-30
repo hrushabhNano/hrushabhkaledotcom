@@ -6,7 +6,7 @@ import { formatPostDate } from "@/lib/format-post-date";
 export const BlogList = ({ posts }) => {
   return (
     <section className="flex flex-col gap-4">
-      <Subheading>Writing</Subheading>
+      <Subheading>Blog</Subheading>
       {posts.slice(0, 3).map((post, index) => (
         <Link
           href={`/blog/${post.slug}`}

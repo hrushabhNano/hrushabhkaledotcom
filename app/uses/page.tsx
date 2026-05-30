@@ -103,7 +103,8 @@ const techStackItems = [
   },
   {
     name: "Hosting & Cloud",
-    value: "Heroku (enterprise projects), Vercel (frontends), GCP (databases & Cloud Run)",
+    value:
+      "Heroku (enterprise projects), Vercel (frontends), GCP (databases & Cloud Run)",
     icon: <IconCloud className="size-4 text-white" stroke={2} />,
     bg: "from-sky-500 to-sky-600 ring-sky-500/30",
   },
@@ -112,25 +113,29 @@ const techStackItems = [
 const aiToolsItems = [
   {
     name: "Claude (claude.ai)",
-    value: "Primary AI assistant for reasoning, code blocks, copy editing, and technical brainstorming.",
+    value:
+      "Primary AI assistant for reasoning, code blocks, copy editing, and technical brainstorming.",
     icon: <IconBrain className="size-4 text-white" stroke={2} />,
     bg: "from-fuchsia-500 to-fuchsia-600 ring-fuchsia-500/30",
   },
   {
     name: "Claude Code",
-    value: "Terminal CLI tool for AI-assisted coding directly inside workspace codebases.",
+    value:
+      "Terminal CLI tool for AI-assisted coding directly inside workspace codebases.",
     icon: <IconTerminal2 className="size-4 text-white" stroke={2} />,
     bg: "from-purple-500 to-purple-600 ring-purple-500/30",
   },
   {
     name: "Cursor",
-    value: "AI code editor for mid-sized changes, context-aware editing, and inline suggestions.",
+    value:
+      "AI code editor for mid-sized changes, context-aware editing, and inline suggestions.",
     icon: <IconCursorText className="size-4 text-white" stroke={2} />,
     bg: "from-slate-600 to-slate-700 ring-slate-600/30",
   },
   {
     name: "Anthropic APIs",
-    value: "Used directly for LangGraph workflows, RAG pipelines, and enterprise automation setups.",
+    value:
+      "Used directly for LangGraph workflows, RAG pipelines, and enterprise automation setups.",
     icon: <IconApi className="size-4 text-white" stroke={2} />,
     bg: "from-amber-500 to-amber-600 ring-amber-500/30",
   },
@@ -139,19 +144,22 @@ const aiToolsItems = [
 const hardwareItems = [
   {
     name: "Notes & Tasks",
-    value: "Notion (team orchestration), Apple Notes (quick capture), Linear (issue tracking)",
+    value:
+      "Notion (team orchestration), Apple Notes (quick capture), Linear (issue tracking)",
     icon: <IconNotebook className="size-4 text-white" stroke={2} />,
     bg: "from-yellow-500 to-yellow-600 ring-yellow-500/30",
   },
   {
     name: "Communication",
-    value: "Slack for internal communication, WhatsApp for client collaborations in India",
+    value:
+      "Slack for internal communication, WhatsApp for client collaborations in India",
     icon: <IconMessageCircle className="size-4 text-white" stroke={2} />,
     bg: "from-green-500 to-green-600 ring-green-500/30",
   },
   {
     name: "Hardware",
-    value: "MacBook Pro (M-series Apple Silicon), Android daily driver (React Native and mobile testing)",
+    value:
+      "MacBook Pro (M-series Apple Silicon), Android daily driver (React Native and mobile testing)",
     icon: <IconDeviceLaptop className="size-4 text-white" stroke={2} />,
     bg: "from-zinc-500 to-zinc-600 ring-zinc-500/30",
   },
@@ -163,8 +171,8 @@ const ItemList = ({ items }: { items: any[] }) => (
       <li key={item.name} className="flex items-start gap-4">
         <div
           className={cn(
-            "mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg bg-linear-to-b shadow-sm ring-1 ring-inset ring-white/20",
-            item.bg
+            "mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg bg-linear-to-b shadow-sm ring-1 ring-white/20 ring-inset",
+            item.bg,
           )}
         >
           {item.icon}

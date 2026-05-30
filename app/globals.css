@@ -132,9 +132,13 @@ html {
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground tracking-[0.01em] leading-[1.65];
   }
   html {
     @apply font-sans;
+  }
+  ::selection {
+    background-color: #fef08a; /* soft yellow background */
+    color: #171717; /* deep dark text for perfect contrast */
   }
 }
