@@ -25,7 +25,7 @@ export async function getFileBySlug(type, slug) {
     mdxSource = await serialize(normalizedContent);
   } catch {
     mdxSource = await serialize(
-      "This article has legacy MDX syntax that needs migration."
+      "This article has legacy MDX syntax that needs migration.",
     );
   }
 
@@ -46,7 +46,7 @@ export async function getAllFilesFrontMatter(type) {
   return files.reduce((allPosts, postSlug) => {
     const source = fs.readFileSync(
       path.join(root, "data", type, postSlug),
-      "utf8"
+      "utf8",
     );
     const { data } = matter(source);
 

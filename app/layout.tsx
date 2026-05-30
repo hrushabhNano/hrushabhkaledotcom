@@ -3,7 +3,7 @@ import "./globals.css";
 
 import type { Metadata } from "next";
 import Script from "next/script";
-import { Inter, Schibsted_Grotesk, Geist } from "next/font/google";
+import { Inter, Schibsted_Grotesk, Geist, Corinthia } from "next/font/google";
 import { GeistSans } from "geist/font/sans";
 import { cn } from "@/lib/utils";
 import { Navbar } from "@/components/navbar";
@@ -15,30 +15,30 @@ const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 const analyticsDomain = process.env.NEXT_PUBLIC_ANALYTICS_DOMAIN;
 const analyticsScriptUrl = process.env.NEXT_PUBLIC_ANALYTICS_SCRIPT_URL;
 
-const siteUrl = "https://manuarora.in";
+const siteUrl = "https://hrushabhkale.com";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Manu Arora - Developer, writer, creator.",
-    template: "%s – Manu Arora",
+    default: "Hrushabh Kale",
+    template: "%s — Hrushabh Kale",
   },
   description:
-    "Full-Stack developer, JavaScript enthusiast, Freelancer and a Learner.",
+    "Tech Lead & Solutions Architect at Nanostuffs Technologies, Pune. Building AI-first systems for enterprise. Writing about full-stack development and technical leadership in India.",
   openGraph: {
-    title: "Manu Arora - Developer, writer, creator.",
+    title: "Hrushabh Kale",
     description:
-      "Full-Stack developer, JavaScript enthusiast, Freelancer and a Learner.",
+      "Tech Lead & Solutions Architect at Nanostuffs Technologies, Pune. Building AI-first systems for enterprise.",
     url: siteUrl,
-    siteName: "Manu Arora",
-    locale: "en_US",
+    siteName: "Hrushabh Kale",
+    locale: "en_IN",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Manu Arora - Developer, writer, creator.",
+    title: "Hrushabh Kale",
     description:
-      "Full-Stack developer, JavaScript enthusiast, Freelancer and a Learner.",
+      "Tech Lead & Solutions Architect at Nanostuffs Technologies, Pune. Building AI-first systems for enterprise.",
   },
 };
 
@@ -54,6 +54,12 @@ const schibstedGrotesk = Schibsted_Grotesk({
   variable: "--font-schibsted-grotesk",
 });
 
+const corinthia = Corinthia({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  variable: "--font-corinthia",
+});
+
 export default function RootLayout({ children }) {
   return (
     <html
@@ -61,18 +67,20 @@ export default function RootLayout({ children }) {
       className={cn(
         inter.variable,
         schibstedGrotesk.variable,
+        geist.variable,
         GeistSans.variable,
+        corinthia.variable,
         "font-sans antialiased",
       )}
       suppressHydrationWarning
     >
-      <body className={cn("font-display bg-theme-bg")}>
-        <Settings />
-        <Navbar />
-        <main>
-          <Providers>{children}</Providers>
-        </main>
-        <Footer />
+      <body className={cn("font-display bg-background text-foreground")}>
+        <Providers>
+          <Settings />
+          <Navbar />
+          <main>{children}</main>
+          <Footer />
+        </Providers>
         {analyticsDomain && analyticsScriptUrl ? (
           <Script
             src={analyticsScriptUrl}

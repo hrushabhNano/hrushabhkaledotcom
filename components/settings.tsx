@@ -7,13 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import { DottedSeparator } from "./separator";
 
 type FontOption = "inter" | "schibsted" | "geist";
-type ColorOption =
-  | "regular"
-  | "rose"
-  | "emerald"
-  | "blue"
-  | "amber"
-  | "violet";
+type ColorOption = "regular" | "rose" | "emerald" | "blue" | "amber" | "violet";
 
 const FONTS: { id: FontOption; label: string; variable: string }[] = [
   {
@@ -114,10 +108,7 @@ const COLORS: {
 const STORAGE_KEY = "site-settings";
 
 function isColorOption(value: unknown): value is ColorOption {
-  return (
-    typeof value === "string" &&
-    COLORS.some((c) => c.id === value)
-  );
+  return typeof value === "string" && COLORS.some((c) => c.id === value);
 }
 
 function loadSettings(): { font: FontOption; color: ColorOption } {
@@ -130,12 +121,9 @@ function loadSettings(): { font: FontOption; color: ColorOption } {
         font?: FontOption;
         color?: unknown;
       };
-      const color = isColorOption(parsed.color)
-        ? parsed.color
-        : "regular";
+      const color = isColorOption(parsed.color) ? parsed.color : "regular";
       const font =
-        parsed.font &&
-        FONTS.some((f) => f.id === parsed.font)
+        parsed.font && FONTS.some((f) => f.id === parsed.font)
           ? parsed.font
           : "schibsted";
       return { font, color };
@@ -148,15 +136,10 @@ function saveSettings(font: FontOption, color: ColorOption) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify({ font, color }));
 }
 
-function applySettings(font: FontOption, color: ColorOption) {
+function applySettings(font: FontOption) {
   const root = document.documentElement;
   const fontConfig = FONTS.find((f) => f.id === font)!;
-  const colorConfig = COLORS.find((c) => c.id === color)!;
-
   root.style.setProperty("--primary-font", fontConfig.variable);
-  root.style.setProperty("--theme-bg", colorConfig.bg);
-  root.style.setProperty("--primary", colorConfig.primary);
-  root.style.setProperty("--foreground", colorConfig.foreground);
 }
 
 export const Settings = () => {
@@ -169,7 +152,7 @@ export const Settings = () => {
     const saved = loadSettings();
     setFont(saved.font);
     setColor(saved.color);
-    applySettings(saved.font, saved.color);
+    applySettings(saved.font);
   }, []);
 
   useEffect(() => {
@@ -188,13 +171,12 @@ export const Settings = () => {
 
   const handleFont = (f: FontOption) => {
     setFont(f);
-    applySettings(f, color);
+    applySettings(f);
     saveSettings(f, color);
   };
 
   const handleColor = (c: ColorOption) => {
     setColor(c);
-    applySettings(font, c);
     saveSettings(font, c);
   };
 

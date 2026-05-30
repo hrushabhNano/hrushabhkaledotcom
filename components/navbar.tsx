@@ -8,6 +8,10 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { DottedUnderline } from "./dotted-underline";
 
+import { useTheme } from "next-themes";
+import { IconSun, IconMoon } from "@tabler/icons-react";
+import { useEffect, useState } from "react";
+
 function isActivePath(pathname: string, href: string) {
   if (href === "/") return pathname === "/";
   return pathname === href || pathname.startsWith(`${href}/`);
@@ -15,17 +19,21 @@ function isActivePath(pathname: string, href: string) {
 
 const links = [
   { title: "Home", href: "/" },
-  { title: "Tweets", href: "/tweets" },
-  { title: "Inspiration", href: "/inspiration" },
-  { title: "Blog", href: "/blog" },
-  { title: "Sponsor", href: "/sponsor" },
+  { title: "Writing", href: "/blog" },
+  { title: "Uses", href: "/uses" },
 ];
 
 export const Navbar = () => {
   const pathname = usePathname();
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
-    <nav className="mx-auto flex max-w-2xl flex-col items-start gap-4 px-4 pt-4 md:pt-8">
+    <nav className="mx-auto flex max-w-3xl flex-col items-start gap-4 px-4 pt-4 md:pt-8">
       <div className="flex items-center gap-2 perspective-distant">
         <motion.div
           variants={GENERAL_VARIANT}
@@ -36,45 +44,54 @@ export const Navbar = () => {
           className="rounded-md bg-white shadow-md dark:bg-neutral-800"
         >
           <Image
-            src="https://assets.aceternity.com/avatars/manu.webp"
-            alt=""
+            src="/avatar.png"
+            alt="Hrushabh Kale Avatar"
             width={40}
             height={40}
             className="aspect-square size-6 rounded-md shadow-2xl"
           />
         </motion.div>
         <h1 className="text-foreground text-xl font-medium tracking-tight md:text-2xl">
-          Manu Arora{" "}
-          <span className="text-foreground/50 font-normal">aka</span>{" "}
-          <span className="font-normal italic">Paaji</span>
+          Hrushabh Kale
         </h1>
       </div>
-      <div className="flex items-center gap-4">
-        {links.map((link) => {
-          const active = isActivePath(pathname, link.href);
-          return (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={cn(
-                "group relative transition-colors",
-                active
-                  ? "text-primary"
-                  : "text-foreground/70 hover:text-primary",
-              )}
-            >
-              {link.title}
-              <DottedUnderline
+      <div className="flex w-full items-center justify-between">
+        <div className="flex items-center gap-4">
+          {links.map((link) => {
+            const active = isActivePath(pathname, link.href);
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
                 className={cn(
-                  "mask-x-from-90% transition-opacity duration-300",
+                  "group relative transition-colors",
                   active
-                    ? "opacity-100"
-                    : "opacity-0 group-hover:opacity-100",
+                    ? "text-primary"
+                    : "text-foreground/70 hover:text-primary",
                 )}
-              />
-            </Link>
-          );
-        })}
+              >
+                {link.title}
+                <DottedUnderline
+                  className={cn(
+                    "mask-x-from-90% transition-opacity duration-300",
+                    active
+                      ? "opacity-100"
+                      : "opacity-0 group-hover:opacity-100",
+                  )}
+                />
+              </Link>
+            );
+          })}
+        </div>
+        {mounted && (
+          <button
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            className="text-foreground/70 hover:text-primary border-border bg-card/50 rounded-lg border p-1.5 transition-colors"
+            aria-label="Toggle Theme"
+          >
+            {theme === "dark" ? <IconSun size={16} /> : <IconMoon size={16} />}
+          </button>
+        )}
       </div>
     </nav>
   );

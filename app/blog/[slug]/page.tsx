@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { getFiles, getFileBySlug } from "@/lib/mdx";
 import BlogPostClient from "./BlogPostClient";
 
-const siteUrl = "https://manuarora.in";
+const siteUrl = "https://hrushabhkale.com";
 
 type PostFrontMatter = {
   title: string;
@@ -26,7 +26,8 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const post = await getFileBySlug("blog", slug);
-  const { title, summary, image } = post.frontMatter as unknown as PostFrontMatter;
+  const { title, summary, image } =
+    post.frontMatter as unknown as PostFrontMatter;
 
   const ogImage = image
     ? image.startsWith("http")

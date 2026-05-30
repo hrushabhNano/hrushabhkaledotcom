@@ -27,10 +27,10 @@
 
 export default function StepCheck({ title }) {
   return (
-    <div className="flex font-small items-baseline mb-2">
+    <div className="font-small mb-2 flex items-baseline">
       <div className="">
         <svg
-          className="h-5 w-5 mr-2 text-green-500 inline-block"
+          className="mr-2 inline-block h-5 w-5 text-green-500"
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"

@@ -1,0 +1,48 @@
+---
+title: "Lessons from Building a React Native App Across Multiple Countries"
+publishedAt: "2026-06-23"
+summary: "Same codebase, different countries, different languages, different date formats, different everything. Here's what actually breaks."
+tags: ["react-native", "engineering", "mobile"]
+---
+
+When we started building nPharma — a React Native platform for pharmaceutical Medical Representatives that needed to work across multiple countries — I thought the hard part would be the feature set. It turned out the hard part was everything else.
+
+The features were fine. The multi-country, multi-language, multi-timezone, multi-currency, multi-date-format mess is what takes twice as long as you think and breaks in ways you don't anticipate.
+
+Here's what I've learned.
+
+### Internationalisation isn't just translation
+
+We used i18next for strings, which is the obvious choice. What i18next doesn't solve is the fact that the same field behaves differently depending on locale.
+
+Date formats are the obvious one — dd/mm/yyyy vs mm/dd/yyyy breaks things the moment a user in one country looks at data entered by a user in another. We use date-fns with explicit locale objects everywhere now. No `new Date().toLocaleDateString()` anywhere in the codebase — it's a footgun.
+
+Number formatting is less obvious but equally annoying. Decimal separators, thousand separators, currency symbols — they all vary. We built a single `formatNumber` utility early on and used it everywhere. Still ran into edge cases three months in.
+
+### Offline-first is non-negotiable for field apps
+
+Pharmaceutical MRs visit doctors in hospitals, clinics, and sometimes places with poor connectivity. The app needs to work when the network doesn't.
+
+We implemented offline-first with a local SQLite cache using WatermelonDB. When the network is available, it syncs. When it's not, the user keeps working and sees their data.
+
+The complexity is in the sync logic — conflict resolution when the same record is modified offline on two devices. We use server-wins for most things and user-wins for a small number of specific fields. Documenting which is which was important; when we didn't, it caused confusion six months later.
+
+### Performance on mid-range Android devices
+
+Most of our users aren't on flagship phones. They're on mid-range Android devices, sometimes two or three years old.
+
+The main thing that kills performance is lists. FlatList with a large dataset and complex list item components will drop frames on older devices. We profiled everything with the Flipper React DevTools Profiler.
+
+What helped: `getItemLayout` when the item height is fixed (removes the layout calculation cost), `React.memo` on list item components (prevents unnecessary re-renders), and lazy loading images with a local cache. We also moved heavy computations off the main thread using `InteractionManager.runAfterInteractions`.
+
+None of this is particularly exciting. It's just profiling and fixing the actual bottleneck instead of guessing.
+
+### The thing that surprised me most
+
+The hardest part of a multi-country app isn't technical. It's keeping track of which country has which configuration, which feature is enabled where, and what the business rules are per market.
+
+We ended up building a configuration layer where each country profile defines its own feature flags, field validations, and data requirements. That layer lives in the backend, fetched at startup, and cached locally. Changing something for one country doesn't require a new app release.
+
+I'd build that layer first if I were starting again. We added it after the fact, which meant retrofitting a lot of hardcoded assumptions.
+
+If you're building something similar and want to talk through specifics, reach out. Happy to share more detail on any of this.

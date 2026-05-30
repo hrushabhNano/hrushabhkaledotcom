@@ -51,7 +51,7 @@ export function BlogIndex({ posts }: BlogIndexProps) {
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Filter by title…"
           className={cn(
-            "w-full rounded-md border border-neutral-200 bg-white py-2.5 pr-3 pl-10 text-sm text-neutral-800",
+            "w-full rounded-md border border-border bg-card py-2.5 pr-3 pl-10 text-sm text-foreground",
             "placeholder:text-foreground/40",
             "focus:border-primary focus:ring-primary focus:ring-1 focus:outline-none",
           )}

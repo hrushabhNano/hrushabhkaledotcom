@@ -1,0 +1,56 @@
+---
+title: "The AI Tooling Stack I Actually Use at a Startup in 2026"
+publishedAt: "2026-06-09"
+summary: "Not the one from the newsletter. The one from the Slack thread where someone asks why the demo broke."
+tags: ["ai", "tools", "engineering"]
+---
+
+Everyone has a \"my AI stack\" post now. Most of them are lists of tools with affiliate links and a sentence saying each one is \"incredibly powerful.\" This is not that.
+
+This is what we're actually running at Nanostuffs, what works, what we replaced, and what turned out to be a bad idea even though it looked good in the demo.
+
+### The core: Claude as the reasoning layer
+
+We use Claude (Anthropic) as the primary model for everything that involves reasoning over structured data, document processing, and multi-step agent workflows. The context window is the main reason — a lot of enterprise work involves feeding the model a big chunk of something (a Salesforce record, a PDF, a transaction history) and asking it to do something useful with it.
+
+GPT-4o is in the picture for some tasks where we need faster turnaround on simpler completions, but Claude handles the heavy work.
+
+### LangGraph for agent orchestration
+
+This was the first time I felt like agent workflows were actually maintainable. LangGraph gives you a proper graph-based execution model — nodes, edges, state management — instead of the \"just chain a bunch of tools and hope\" approach that most frameworks default to.
+
+The WhatsApp automation work we do at Nanostuffs involves multi-step workflows with conditional branching: classify the message, route it, fetch context from Salesforce, generate a response, validate it, send it. That's a workflow that would be a nightmare to debug as a flat chain. As a graph with explicit state, it's manageable.
+
+The learning curve is real. The first week with LangGraph involves reading the docs twice and still being confused about checkpointing. But it's worth it.
+
+### MCP for tool connectivity
+
+We started using the Model Context Protocol recently for connecting models to internal tools. The idea is simple: instead of writing custom integrations for every tool the model needs to call, MCP gives you a standard interface.
+
+In practice, this means we can expose internal APIs to a Claude-powered assistant without writing a new wrapper every time someone wants to add a capability. It's still early, but it's already cleaner than how we were doing it before.
+
+### What we use for RAG
+
+PostgreSQL with pgvector. Not Pinecone, not Weaviate, not whatever vector database is trending this week. Our data is already in Postgres. Adding a vector column and using pgvector for similarity search means one less database to operate and one less thing to break.
+
+The tradeoff is scale — at very high volumes, a dedicated vector DB makes sense. We're not at that scale. pgvector is fast enough and it's in the stack we already know.
+
+### Claude Code for development
+
+This one changed my daily workflow more than anything else. Claude Code is a command-line tool that gives Claude direct access to the codebase. Not just code completion — it can read the whole project, run commands, and make changes across multiple files.
+
+The way I use it: complex refactors, writing boilerplate for new modules, and explaining why a test is failing when I've been staring at it for 20 minutes and it still doesn't make sense. It's not magic — it gets things wrong, and you still need to review everything it touches — but it's faster than switching to a chat window and pasting chunks of code.
+
+### What we tried and dropped
+
+**Langchain**: Started with it, moved to LangGraph. LangGraph is by the same team and is better for anything non-trivial. Langchain makes the simple stuff easy and the complex stuff confusing.
+
+**OpenAI Assistants API**: The managed thread storage seemed useful until we needed to inspect what was in the thread. The level of control you give up is not worth it for production systems.
+
+**Pinecone**: Replaced with pgvector. See above.
+
+### The thing I'd tell myself two years ago
+
+Start with the simplest version that works. Add complexity when you have a specific reason to, not because the architecture diagram looks impressive. Most AI features in production are not that complicated — they're a prompt, some context, an API call, and error handling. The interesting engineering is in making that reliable at scale.
+
+The tooling changes fast. What I'm using in six months will probably be different in some ways. But the underlying approach — prefer boring infrastructure, be suspicious of abstractions until you understand what they're abstracting — stays the same.

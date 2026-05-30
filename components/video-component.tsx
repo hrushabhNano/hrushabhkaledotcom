@@ -4,7 +4,7 @@ import React from "react";
 export default function VideoComponent({ videoUrl }) {
   return (
     <div
-      className="max-w-4xl mx-auto"
+      className="mx-auto max-w-4xl"
       style={{
         overflow: "hidden",
         paddingBottom: "56.25%",
