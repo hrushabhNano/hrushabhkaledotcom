@@ -142,3 +142,149 @@ html {
     color: #171717; /* deep dark text for perfect contrast */
   }
 }
+
+/* Editorial Grid / Blueprint Aesthetic */
+:root {
+  --blueprint-line: rgba(0, 0, 0, 0.05);
+}
+
+.dark {
+  --blueprint-line: rgba(255, 255, 255, 0.04);
+}
+
+.blueprint-wrapper {
+  position: relative;
+  max-width: 48rem; /* 3xl */
+  margin: 0 auto;
+  min-height: 100vh;
+}
+
+/* Vertical Scaffold Lines */
+.blueprint-wrapper::before {
+  content: "";
+  position: absolute;
+  top: -40px;
+  bottom: -40px;
+  left: 4px;
+  width: 1px;
+  background-color: var(--blueprint-line);
+  pointer-events: none;
+  z-index: 10;
+}
+
+.blueprint-wrapper::after {
+  content: "";
+  position: absolute;
+  top: -40px;
+  bottom: -40px;
+  right: 4px;
+  width: 1px;
+  background-color: var(--blueprint-line);
+  pointer-events: none;
+  z-index: 10;
+}
+
+@media (min-width: 768px) {
+  .blueprint-wrapper::before {
+    left: 0;
+  }
+  .blueprint-wrapper::after {
+    right: 0;
+  }
+}
+
+/* Horizontal Scaffold Lines */
+.blueprint-navbar-top-line {
+  position: absolute;
+  top: 0;
+  left: 4px;
+  right: 4px;
+  height: 1px;
+  background-color: var(--blueprint-line);
+  pointer-events: none;
+}
+
+.blueprint-navbar-line {
+  position: absolute;
+  bottom: 0;
+  left: 4px;
+  right: 4px;
+  height: 1px;
+  background-color: var(--blueprint-line);
+  pointer-events: none;
+}
+
+.blueprint-divider-line {
+  position: absolute;
+  left: calc(-1rem + 4px);
+  right: calc(-1rem + 4px);
+  height: 1px;
+  background-color: var(--blueprint-line);
+  pointer-events: none;
+}
+
+@media (min-width: 768px) {
+  .blueprint-navbar-top-line,
+  .blueprint-navbar-line {
+    left: 0;
+    right: 0;
+  }
+  .blueprint-divider-line {
+    left: -1rem;
+    right: -1rem;
+  }
+}
+
+/* Intersection Markers (+ symbols) */
+.blueprint-marker-left,
+.blueprint-marker-right {
+  position: absolute;
+  top: 50%;
+  width: 9px;
+  height: 9px;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  user-select: none;
+  opacity: 0.45;
+}
+
+.dark .blueprint-marker-left,
+.dark .blueprint-marker-right {
+  opacity: 0.35;
+}
+
+.blueprint-marker-left::before,
+.blueprint-marker-left::after,
+.blueprint-marker-right::before,
+.blueprint-marker-right::after {
+  content: "";
+  position: absolute;
+  background-color: var(--foreground);
+}
+
+/* Horizontal line of the + */
+.blueprint-marker-left::before,
+.blueprint-marker-right::before {
+  top: 4px;
+  left: 0;
+  width: 9px;
+  height: 1px;
+}
+
+/* Vertical line of the + */
+.blueprint-marker-left::after,
+.blueprint-marker-right::after {
+  top: 0;
+  left: 4px;
+  width: 1px;
+  height: 9px;
+}
+
+.blueprint-marker-left {
+  left: 0;
+}
+
+.blueprint-marker-right {
+  right: 0;
+  transform: translate(50%, -50%);
+}

@@ -21,13 +21,7 @@ export const Signature = () => {
     { x: 84, w: 18, delay: 0.68, duration: 0.15 }, // h
     { x: 102, w: 16, delay: 0.83, duration: 0.12 }, // a
     { x: 118, w: 18, delay: 0.95, duration: 0.15 }, // b
-    { x: 136, w: 18, delay: 1.1, duration: 0.15 }, // h
-
-    // --- "Kale" (starts after a natural 0.25s hand-lift pause) ---
-    { x: 154, w: 26, delay: 1.45, duration: 0.22 }, // K
-    { x: 180, w: 16, delay: 1.67, duration: 0.12 }, // a
-    { x: 196, w: 16, delay: 1.79, duration: 0.15 }, // l
-    { x: 212, w: 38, delay: 1.94, duration: 0.18 }, // e + safety margin
+    { x: 136, w: 22, delay: 1.1, duration: 0.15 }, // h + safety margin
   ];
 
   return (
@@ -39,14 +33,14 @@ export const Signature = () => {
     >
       <svg
         key={animationKey}
-        viewBox="0 0 250 80"
-        className="h-[80px] w-[250px]"
+        viewBox="0 0 170 80"
+        className="h-[80px] w-[170px]"
         xmlns="http://www.w3.org/2000/svg"
       >
         <defs>
           <mask id={`signature-mask-${animationKey}`}>
             {/* Dark background hides everything */}
-            <rect x="0" y="0" width="250" height="80" fill="black" />
+            <rect x="0" y="0" width="170" height="80" fill="black" />
 
             {/* Letter-by-letter sequential reveal blocks */}
             {maskSegments.map((seg, idx) => (
@@ -77,12 +71,12 @@ export const Signature = () => {
           className="text-foreground/75 text-4xl select-none"
           mask={`url(#signature-mask-${animationKey})`}
         >
-          Hrushabh Kale
+          Hrushabh
         </text>
 
         {/* Calligraphic Underline Flourish - sweeps elegantly under the signature from left to right */}
         <motion.path
-          d="M 20,62 Q 125,70 230,60"
+          d="M 20,62 Q 85,70 150,60"
           fill="none"
           stroke="currentColor"
           strokeWidth="2.5" // Bolder stroke to match the bolder text
@@ -94,7 +88,7 @@ export const Signature = () => {
           transition={{
             duration: 0.9,
             ease: [0.25, 0.1, 0.25, 1], // Smooth draw easing
-            delay: 2.15, // Draws immediately after "e" finishes
+            delay: 1.3, // Draws immediately after "h" finishes
           }}
         />
       </svg>

@@ -34,7 +34,19 @@ export const Navbar = () => {
   }, []);
 
   return (
-    <nav className="mx-auto flex max-w-3xl flex-col items-start gap-4 px-4 pt-4 md:pt-8">
+    <nav className="relative mx-auto flex max-w-3xl flex-col items-start gap-4 px-4 pt-4 pb-4 md:pt-8 md:pb-6">
+      {/* Top horizontal scaffold line and markers */}
+      <div className="blueprint-navbar-top-line">
+        <span className="blueprint-marker-left" />
+        <span className="blueprint-marker-right" />
+      </div>
+
+      {/* Bottom horizontal scaffold line and markers */}
+      <div className="blueprint-navbar-line">
+        <span className="blueprint-marker-left" />
+        <span className="blueprint-marker-right" />
+      </div>
+
       <div className="flex items-center gap-2 perspective-distant">
         <motion.div
           variants={GENERAL_VARIANT}
@@ -52,7 +64,7 @@ export const Navbar = () => {
             className="aspect-square size-6 rounded-md shadow-2xl"
           />
         </motion.div>
-        <h1 className="font-[family-name:var(--font-pacifico)] text-foreground text-[1.5em] leading-none">
+        <h1 className="text-foreground font-[family-name:var(--font-pacifico)] text-[1.5em] leading-none">
           Hrushabh Kale
         </h1>
       </div>

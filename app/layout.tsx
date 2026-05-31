@@ -3,7 +3,13 @@ import "./globals.css";
 
 import type { Metadata } from "next";
 import Script from "next/script";
-import { Inter, Schibsted_Grotesk, Geist, Pacifico, Corinthia } from "next/font/google";
+import {
+  Inter,
+  Schibsted_Grotesk,
+  Geist,
+  Pacifico,
+  Corinthia,
+} from "next/font/google";
 import { GeistSans } from "geist/font/sans";
 import { cn } from "@/lib/utils";
 import { Navbar } from "@/components/navbar";
@@ -85,11 +91,13 @@ export default function RootLayout({ children }) {
       <body className={cn("font-display bg-background text-foreground")}>
         <Providers>
           <Settings />
-          <Navbar />
-          <main>
-            <PageTransition>{children}</PageTransition>
-          </main>
-          <Footer />
+          <div className="blueprint-wrapper">
+            <Navbar />
+            <main>
+              <PageTransition>{children}</PageTransition>
+            </main>
+            <Footer />
+          </div>
         </Providers>
         {analyticsDomain && analyticsScriptUrl ? (
           <Script
