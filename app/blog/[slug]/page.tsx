@@ -46,6 +46,9 @@ export async function generateMetadata({
       description: summary,
       type: "article",
       url: `${siteUrl}/blog/${slug}`,
+      publishedTime: (post.frontMatter as unknown as PostFrontMatter)
+        .publishedAt,
+      authors: ["Hrushabh Kale"],
       ...(ogImage ? { images: [{ url: ogImage }] } : {}),
     },
     twitter: {
@@ -64,10 +67,72 @@ export default async function BlogSlugPage({
 }) {
   const { slug } = await params;
   const post = await getFileBySlug("blog", slug);
+  const frontMatter = post.frontMatter as unknown as PostFrontMatter;
+
+  const blogPostSchema = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: frontMatter.title,
+    description: frontMatter.summary,
+    datePublished: frontMatter.publishedAt,
+    dateModified: frontMatter.publishedAt,
+    url: `${siteUrl}/blog/${slug}`,
+    author: {
+      "@type": "Person",
+      "@id": `${siteUrl}/#person`,
+      name: "Hrushabh Kale",
+      url: siteUrl,
+    },
+    publisher: {
+      "@type": "Person",
+      name: "Hrushabh Kale",
+      url: siteUrl,
+    },
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `${siteUrl}/blog/${slug}`,
+    },
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: siteUrl,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Writing",
+        item: `${siteUrl}/blog`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: frontMatter.title,
+        item: `${siteUrl}/blog/${slug}`,
+      },
+    ],
+  };
+
   return (
-    <BlogPostClient
-      mdxSource={post.mdxSource}
-      frontMatter={post.frontMatter as unknown as PostFrontMatter}
-    />
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(blogPostSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+      <BlogPostClient
+        mdxSource={post.mdxSource}
+        frontMatter={frontMatter}
+      />
+    </>
   );
 }

@@ -6,9 +6,9 @@ import { BlogIndex, type BlogIndexPost } from "@/components/blog/blog-index";
 import { getAllFilesFrontMatter } from "@/lib/mdx";
 
 export const metadata: Metadata = {
-  title: "Blog - Hrushabh Kale",
+  title: "Writing",
   description:
-    "Notes on software, design engineering, freelancing, and things I learn while building.",
+    "Thoughts on AI tooling, full-stack engineering, and technical leadership in Indian startups. LangGraph, React Native, WhatsApp automation, and more.",
   alternates: {
     canonical: "/blog",
   },

@@ -7,6 +7,7 @@ import { Companies } from "@/components/companies";
 import { getAllFilesFrontMatter } from "@/lib/mdx";
 import { BlogList } from "@/components/blog/blog-list";
 import { Certifications } from "@/components/certifications";
+import PersonSchema from "@/components/seo/PersonSchema";
 
 type HomeBlogPost = {
   slug: string;
@@ -17,7 +18,9 @@ type HomeBlogPost = {
 export const metadata: Metadata = {
   title: "Hrushabh Kale",
   description:
-    "Tech Lead & Solutions Architect at Nanostuffs Technologies, Pune. Building AI-first systems for enterprise. Writing about full-stack development and technical leadership in India.",
+    "Tech Lead & Solutions Architect at Nanostuffs Technologies, Pune. " +
+    "Building AI-first systems for enterprise — LangGraph, WhatsApp automation, React Native. " +
+    "Writing about full-stack development and technical leadership in India.",
   alternates: {
     canonical: "/",
   },
@@ -30,19 +33,22 @@ export default async function Home() {
   );
 
   return (
-    <Container>
-      <div className="pt-4">
-        <Header />
-      </div>
-      <Divider />
-      <Work />
-      <Divider />
-      <Companies />
-      <Divider />
-      <Certifications />
-      <Divider />
-      <BlogList posts={posts.slice(0, 3)} />
-      <Divider />
-    </Container>
+    <>
+      <PersonSchema />
+      <Container>
+        <div className="pt-4">
+          <Header />
+        </div>
+        <Divider />
+        <Work />
+        <Divider />
+        <Companies />
+        <Divider />
+        <Certifications />
+        <Divider />
+        <BlogList posts={posts.slice(0, 3)} />
+        <Divider />
+      </Container>
+    </>
   );
 }

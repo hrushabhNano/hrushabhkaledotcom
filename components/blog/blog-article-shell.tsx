@@ -27,9 +27,9 @@ export function BlogArticleShell({
   return (
     <Container>
       <article className="pt-4">
-        <h2 className="text-primary pt-3 font-medium tracking-tight">
+        <h1 className="text-primary pt-3 font-medium tracking-tight">
           {frontMatter.title}
-        </h2>
+        </h1>
         {frontMatter.summary ? (
           <p className="text-foreground/70 pt-3 text-sm leading-relaxed">
             {frontMatter.summary}
