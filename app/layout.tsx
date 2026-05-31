@@ -3,7 +3,7 @@ import "./globals.css";
 
 import type { Metadata } from "next";
 import Script from "next/script";
-import { Inter, Schibsted_Grotesk, Geist, Corinthia } from "next/font/google";
+import { Inter, Schibsted_Grotesk, Geist, Pacifico, Corinthia } from "next/font/google";
 import { GeistSans } from "geist/font/sans";
 import { cn } from "@/lib/utils";
 import { Navbar } from "@/components/navbar";
@@ -55,6 +55,12 @@ const schibstedGrotesk = Schibsted_Grotesk({
   variable: "--font-schibsted-grotesk",
 });
 
+const pacifico = Pacifico({
+  subsets: ["latin"],
+  weight: ["400"],
+  variable: "--font-pacifico",
+});
+
 const corinthia = Corinthia({
   subsets: ["latin"],
   weight: ["400", "700"],
@@ -70,6 +76,7 @@ export default function RootLayout({ children }) {
         schibstedGrotesk.variable,
         geist.variable,
         GeistSans.variable,
+        pacifico.variable,
         corinthia.variable,
         "font-sans antialiased",
       )}

@@ -26,6 +26,9 @@ const COLORS: {
   bg: string;
   primary: string;
   foreground: string;
+  bgDark: string;
+  primaryDark: string;
+  foregroundDark: string;
   gradientFrom: string;
   gradientTo: string;
   ringOffset: string;
@@ -38,6 +41,9 @@ const COLORS: {
     bg: "var(--color-stone-50)",
     primary: "var(--color-stone-800)",
     foreground: "var(--color-stone-600)",
+    bgDark: "var(--color-stone-950)",
+    primaryDark: "var(--color-stone-200)",
+    foregroundDark: "var(--color-stone-400)",
     gradientFrom: "from-stone-500",
     gradientTo: "to-neutral-800",
     ringOffset: "ring-offset-stone-600",
@@ -50,6 +56,9 @@ const COLORS: {
     bg: "var(--color-rose-50)",
     primary: "var(--color-rose-900)",
     foreground: "var(--color-rose-600)",
+    bgDark: "var(--color-rose-950)",
+    primaryDark: "var(--color-rose-200)",
+    foregroundDark: "var(--color-rose-400)",
     gradientFrom: "from-rose-400",
     gradientTo: "to-fuchsia-700",
     ringOffset: "ring-offset-fuchsia-500",
@@ -62,6 +71,9 @@ const COLORS: {
     bg: "var(--color-teal-50)",
     primary: "var(--color-teal-900)",
     foreground: "var(--color-teal-600)",
+    bgDark: "var(--color-teal-950)",
+    primaryDark: "var(--color-teal-200)",
+    foregroundDark: "var(--color-teal-400)",
     gradientFrom: "from-teal-400",
     gradientTo: "to-cyan-700",
     ringOffset: "ring-offset-teal-500",
@@ -74,6 +86,9 @@ const COLORS: {
     bg: "var(--color-indigo-50)",
     primary: "var(--color-indigo-950)",
     foreground: "var(--color-indigo-600)",
+    bgDark: "var(--color-indigo-950)",
+    primaryDark: "var(--color-indigo-200)",
+    foregroundDark: "var(--color-indigo-400)",
     gradientFrom: "from-indigo-400",
     gradientTo: "to-violet-700",
     ringOffset: "ring-offset-indigo-500",
@@ -86,6 +101,9 @@ const COLORS: {
     bg: "var(--color-amber-50)",
     primary: "var(--color-amber-950)",
     foreground: "var(--color-amber-700)",
+    bgDark: "var(--color-amber-950)",
+    primaryDark: "var(--color-amber-200)",
+    foregroundDark: "var(--color-amber-400)",
     gradientFrom: "from-amber-400",
     gradientTo: "to-orange-600",
     ringOffset: "ring-offset-amber-500",
@@ -98,6 +116,9 @@ const COLORS: {
     bg: "var(--color-violet-50)",
     primary: "var(--color-violet-950)",
     foreground: "var(--color-violet-600)",
+    bgDark: "var(--color-violet-950)",
+    primaryDark: "var(--color-violet-200)",
+    foregroundDark: "var(--color-violet-400)",
     gradientFrom: "from-violet-400",
     gradientTo: "to-purple-700",
     ringOffset: "ring-offset-violet-500",
@@ -136,10 +157,23 @@ function saveSettings(font: FontOption, color: ColorOption) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify({ font, color }));
 }
 
-function applySettings(font: FontOption) {
+function applySettings(font: FontOption, color: ColorOption) {
   const root = document.documentElement;
   const fontConfig = FONTS.find((f) => f.id === font)!;
   root.style.setProperty("--primary-font", fontConfig.variable);
+
+  const colorConfig = COLORS.find((c) => c.id === color)!;
+  const isDark = root.classList.contains("dark");
+
+  if (isDark) {
+    root.style.setProperty("--background", colorConfig.bgDark);
+    root.style.setProperty("--primary", colorConfig.primaryDark);
+    root.style.setProperty("--foreground", colorConfig.foregroundDark);
+  } else {
+    root.style.setProperty("--background", colorConfig.bg);
+    root.style.setProperty("--primary", colorConfig.primary);
+    root.style.setProperty("--foreground", colorConfig.foreground);
+  }
 }
 
 export const Settings = () => {
@@ -152,7 +186,25 @@ export const Settings = () => {
     const saved = loadSettings();
     setFont(saved.font);
     setColor(saved.color);
-    applySettings(saved.font);
+    applySettings(saved.font, saved.color);
+
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === "class") {
+          const current = loadSettings();
+          applySettings(current.font, current.color);
+        }
+      });
+    });
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    return () => {
+      observer.disconnect();
+    };
   }, []);
 
   useEffect(() => {
@@ -171,12 +223,13 @@ export const Settings = () => {
 
   const handleFont = (f: FontOption) => {
     setFont(f);
-    applySettings(f);
+    applySettings(f, color);
     saveSettings(f, color);
   };
 
   const handleColor = (c: ColorOption) => {
     setColor(c);
+    applySettings(font, c);
     saveSettings(font, c);
   };
 

@@ -36,7 +36,7 @@ export function BlogArticleShell({
           </p>
         ) : null}
         <div className="text-foreground/50 mt-4 flex flex-wrap items-baseline gap-x-3 gap-y-1 font-mono text-xs">
-          <span>Manu Arora</span>
+          <span>Hrushabh Kale</span>
           <span aria-hidden className="text-foreground/30">
             ·
           </span>
@@ -53,7 +53,7 @@ export function BlogArticleShell({
 
         <DottedSeparator className="my-8" />
 
-        <div className="prose prose-neutral prose-headings:scroll-mt-24 prose-a:text-primary prose-a:no-underline hover:prose-a:underline max-w-none">
+        <div className="prose prose-neutral dark:prose-invert prose-headings:scroll-mt-24 prose-a:text-primary prose-a:no-underline hover:prose-a:underline max-w-none">
           {children}
         </div>
 

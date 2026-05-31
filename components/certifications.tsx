@@ -56,7 +56,7 @@ export const Certifications = () => {
                   className="size-full object-contain"
                 />
               </div>
-              <div className="flex flex-1 flex-col md:grid md:grid-cols-[220px_1fr] md:items-start md:gap-4">
+              <div className="flex flex-1 flex-col md:grid md:grid-cols-[1fr_150px] md:items-start md:gap-4">
                 <span className="text-foreground leading-snug font-medium md:pt-1">
                   {item.name}
                 </span>

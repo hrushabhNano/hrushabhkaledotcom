@@ -52,7 +52,7 @@ export const Navbar = () => {
             className="aspect-square size-6 rounded-md shadow-2xl"
           />
         </motion.div>
-        <h1 className="text-foreground text-xl font-medium tracking-tight md:text-2xl">
+        <h1 className="font-[family-name:var(--font-pacifico)] text-foreground text-[1.5em] leading-none">
           Hrushabh Kale
         </h1>
       </div>
