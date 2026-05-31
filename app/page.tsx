@@ -6,6 +6,7 @@ import Divider from "@/components/divider";
 import { Companies } from "@/components/companies";
 import { getAllFilesFrontMatter } from "@/lib/mdx";
 import { BlogList } from "@/components/blog/blog-list";
+import { Certifications } from "@/components/certifications";
 
 type HomeBlogPost = {
   slug: string;
@@ -37,6 +38,8 @@ export default async function Home() {
       <Work />
       <Divider />
       <Companies />
+      <Divider />
+      <Certifications />
       <Divider />
       <BlogList posts={posts.slice(0, 3)} />
       <Divider />

@@ -132,7 +132,7 @@ html {
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground tracking-[0.01em] leading-[1.65];
+    @apply bg-background text-foreground leading-[1.65] tracking-[0.01em];
   }
   html {
     @apply font-sans;

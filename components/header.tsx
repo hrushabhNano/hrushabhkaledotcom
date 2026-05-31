@@ -15,9 +15,9 @@ export const Header = () => {
         aren&apos;t visible until they break.
       </div>
       <div className="text-foreground text-base leading-[1.75] tracking-[0.015em]">
-        I write about building with AI, the calls you make under real constraints,
-        and what running a tech team at an Indian startup actually looks like from
-        the inside.
+        I write about building with AI, the calls you make under real
+        constraints, and what running a tech team at an Indian startup actually
+        looks like from the inside.
       </div>
       <div className="text-foreground text-base leading-[1.75] tracking-[0.015em]">
         Open to conversations about AI systems, architecture, and speaking at
@@ -25,11 +25,7 @@ export const Header = () => {
         <LinkPreview url="https://www.linkedin.com/in/hrushabh-kale/">
           LinkedIn
         </LinkPreview>{" "}
-        and{" "}
-        <LinkPreview url="https://x.com/hrushabh__k">
-          X
-        </LinkPreview>
-        .
+        and <LinkPreview url="https://x.com/hrushabh__k">X</LinkPreview>.
       </div>
     </div>
   );

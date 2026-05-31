@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { Settings } from "@/components/settings";
+import { PageTransition } from "@/components/page-transition";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -78,7 +79,9 @@ export default function RootLayout({ children }) {
         <Providers>
           <Settings />
           <Navbar />
-          <main>{children}</main>
+          <main>
+            <PageTransition>{children}</PageTransition>
+          </main>
           <Footer />
         </Providers>
         {analyticsDomain && analyticsScriptUrl ? (

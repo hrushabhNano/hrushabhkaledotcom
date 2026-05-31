@@ -1,4 +1,10 @@
-export type Category = "Product" | "People" | "Site" | "Font" | "Movie" | "Creator";
+export type Category =
+  | "Product"
+  | "People"
+  | "Site"
+  | "Font"
+  | "Movie"
+  | "Creator";
 
 export interface Favorite {
   id: string;
@@ -39,7 +45,7 @@ export const favorites: Favorite[] = [
     description: "My source of inspiration",
     category: "People",
   },
-  
+
   // From Manu's Profile
   {
     id: "fireship",
@@ -52,7 +58,8 @@ export const favorites: Favorite[] = [
     id: "naval",
     name: "Naval",
     url: "https://nav.al",
-    description: "Entrepreneur and philosopher. Profound thoughts on wealth and happiness",
+    description:
+      "Entrepreneur and philosopher. Profound thoughts on wealth and happiness",
     category: "People",
   },
 

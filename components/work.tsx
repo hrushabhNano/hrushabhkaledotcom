@@ -74,9 +74,11 @@ export const Work = () => {
               >
                 {item.icon}
               </div>
-              <div className="flex flex-1 flex-col md:grid md:grid-cols-[220px_1fr] md:items-center md:gap-4">
-                <span className="text-foreground font-medium leading-snug">{item.name}</span>
-                <span className="text-foreground/70 text-sm leading-relaxed">
+              <div className="flex flex-1 flex-col md:grid md:grid-cols-[220px_1fr] md:items-start md:gap-4">
+                <span className="text-foreground leading-snug font-medium md:pt-1">
+                  {item.name}
+                </span>
+                <span className="text-foreground/70 text-sm leading-relaxed md:pt-1">
                   {item.description}
                 </span>
               </div>
@@ -89,10 +91,10 @@ export const Work = () => {
                 key={item.name}
                 href={item.href}
                 target="_blank"
-                className="-m-2 flex cursor-pointer flex-col items-start gap-1 rounded-lg p-2 transition-colors hover:bg-neutral-100 md:flex-row md:items-center dark:hover:bg-neutral-800/40"
+                className="-m-2 flex cursor-pointer flex-col items-start gap-1 rounded-lg p-2 transition-colors hover:bg-neutral-100 md:flex-row md:items-start dark:hover:bg-neutral-800/40"
               >
                 {content}
-                <span className="text-primary ml-auto font-mono text-xs md:pl-2">
+                <span className="text-primary ml-auto font-mono text-xs md:pt-1 md:pl-2">
                   ↗ Link
                 </span>
               </Link>
@@ -102,10 +104,10 @@ export const Work = () => {
           return (
             <div
               key={item.name}
-              className="-m-2 flex flex-col items-start gap-1 rounded-lg p-2 md:flex-row md:items-center"
+              className="-m-2 flex flex-col items-start gap-1 rounded-lg p-2 md:flex-row md:items-start"
             >
               {content}
-              <span className="text-foreground/30 ml-auto font-mono text-xs select-none md:pl-2">
+              <span className="text-foreground/30 ml-auto font-mono text-xs select-none md:pt-1 md:pl-2">
                 Internal
               </span>
             </div>

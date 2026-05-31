@@ -7,7 +7,8 @@ import Container from "@/components/container";
 import { Subheading } from "@/components/subheading";
 
 // Cache for OG images to avoid refetching
-const ogImageCache: Record<string, { image: string | null; loading: boolean }> = {};
+const ogImageCache: Record<string, { image: string | null; loading: boolean }> =
+  {};
 
 // Prefetch OG image for a URL
 async function prefetchOgImage(url: string): Promise<string | null> {
@@ -18,7 +19,9 @@ async function prefetchOgImage(url: string): Promise<string | null> {
   ogImageCache[url] = { image: null, loading: true };
 
   try {
-    const response = await fetch(`https://api.microlink.io/?url=${encodeURIComponent(url)}`);
+    const response = await fetch(
+      `https://api.microlink.io/?url=${encodeURIComponent(url)}`,
+    );
     const data = await response.json();
     const imageUrl = data?.data?.image?.url || data?.data?.logo?.url || null;
     ogImageCache[url] = { image: imageUrl, loading: false };
@@ -47,8 +50,12 @@ type FilterCategory = "All" | Category;
 
 function SearchIcon({ isHovered }: { isHovered: boolean }) {
   return (
-    <div className='relative shrink-0 size-4 text-foreground/50'>
-      <Search size={16} strokeWidth={1.5} className={isHovered ? "text-foreground" : ""} />
+    <div className="text-foreground/50 relative size-4 shrink-0">
+      <Search
+        size={16}
+        strokeWidth={1.5}
+        className={isHovered ? "text-foreground" : ""}
+      />
     </div>
   );
 }
@@ -68,12 +75,23 @@ function SearchAndFilters({
   const [isInputHovered, setIsInputHovered] = useState(false);
   const [isInputFocused, setIsInputFocused] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const categories: FilterCategory[] = ["All", "Product", "People", "Site", "Font", "Movie", "Creator"];
+  const categories: FilterCategory[] = [
+    "All",
+    "Product",
+    "People",
+    "Site",
+    "Font",
+    "Movie",
+    "Creator",
+  ];
 
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setShowDropdown(false);
       }
     };
@@ -88,44 +106,53 @@ function SearchAndFilters({
   }, [showDropdown]);
 
   return (
-    <div className='flex gap-4 items-center relative shrink-0 w-full mb-8' role='search'>
+    <div
+      className="relative mb-8 flex w-full shrink-0 items-center gap-4"
+      role="search"
+    >
       {/* Search Input */}
       <div
-        className='basis-0 flex gap-3 grow items-center min-h-px min-w-px relative shrink-0'
+        className="relative flex min-h-px min-w-px shrink-0 grow basis-0 items-center gap-3"
         onMouseEnter={() => setIsInputHovered(true)}
-        onMouseLeave={() => setIsInputHovered(false)}>
+        onMouseLeave={() => setIsInputHovered(false)}
+      >
         <SearchIcon isHovered={isInputHovered || isInputFocused} />
         <input
-          id='search-favorites'
-          type='search'
-          placeholder='Search links'
+          id="search-favorites"
+          type="search"
+          placeholder="Search links"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           onFocus={() => setIsInputFocused(true)}
           onBlur={() => setIsInputFocused(false)}
-          className='font-normal relative shrink-0 text-sm text-justify bg-transparent border-none outline-none text-foreground placeholder:text-foreground/40 w-full'
-          aria-label='Search favorites'
+          className="text-foreground placeholder:text-foreground/40 relative w-full shrink-0 border-none bg-transparent text-justify text-sm font-normal outline-none"
+          aria-label="Search favorites"
         />
       </div>
 
       {/* Filter Dropdown */}
-      <div className='relative z-50' ref={dropdownRef}>
+      <div className="relative z-50" ref={dropdownRef}>
         <button
           onClick={() => setShowDropdown(!showDropdown)}
-          className='flex gap-1 items-center justify-center relative shrink-0 bg-transparent border-none cursor-pointer hover:opacity-70 transition-opacity px-2 py-1 -mx-2 -my-1'
-          aria-label='Filter by category'
-          aria-haspopup='true'
-          aria-expanded={showDropdown}>
-          <p className='font-medium relative shrink-0 text-foreground text-sm text-justify text-nowrap whitespace-pre'>
+          className="relative -mx-2 -my-1 flex shrink-0 cursor-pointer items-center justify-center gap-1 border-none bg-transparent px-2 py-1 transition-opacity hover:opacity-70"
+          aria-label="Filter by category"
+          aria-haspopup="true"
+          aria-expanded={showDropdown}
+        >
+          <p className="text-foreground relative shrink-0 text-justify text-sm font-medium text-nowrap whitespace-pre">
             {selectedCategory === "All" ? "All" : selectedCategory + "s"}
           </p>
-          <ChevronDown className='size-4 text-foreground/70' strokeWidth={1.5} />
+          <ChevronDown
+            className="text-foreground/70 size-4"
+            strokeWidth={1.5}
+          />
         </button>
 
         {showDropdown && (
           <div
-            className='absolute right-0 top-full mt-2 bg-card border border-border rounded-lg shadow-lg py-1 z-50 min-w-32'
-            role='menu'>
+            className="bg-card border-border absolute top-full right-0 z-50 mt-2 min-w-32 rounded-lg border py-1 shadow-lg"
+            role="menu"
+          >
             {categories.map((category) => (
               <button
                 key={category}
@@ -133,13 +160,14 @@ function SearchAndFilters({
                   setSelectedCategory(category);
                   setShowDropdown(false);
                 }}
-                className={`w-full text-left px-4 py-2 text-sm cursor-pointer transition-colors ${
+                className={`w-full cursor-pointer px-4 py-2 text-left text-sm transition-colors ${
                   selectedCategory === category
-                    ? "font-medium text-foreground bg-neutral-100 dark:bg-neutral-800"
+                    ? "text-foreground bg-neutral-100 font-medium dark:bg-neutral-800"
                     : "text-foreground/60 hover:text-foreground hover:bg-neutral-100 dark:hover:bg-neutral-800/50"
                 }`}
-                role='menuitem'
-                aria-current={selectedCategory === category}>
+                role="menuitem"
+                aria-current={selectedCategory === category}
+              >
                 {category === "All" ? "All" : category + "s"}
               </button>
             ))}
@@ -204,58 +232,60 @@ function FavoriteItem({
   }, []);
 
   return (
-    <div className='relative w-full py-1'>
+    <div className="relative w-full py-1">
       {/* OG Image Preview - outside the anchor to avoid opacity inheritance */}
       <div
-        className={`absolute right-[105%] hidden md:block top-1/2 -translate-y-1/2 z-50 pointer-events-none transition-all duration-200 ease-out ${
-          isHovered ? "opacity-100 translate-x-0" : "opacity-0 translate-x-2"
+        className={`pointer-events-none absolute top-1/2 right-[105%] z-50 hidden -translate-y-1/2 transition-all duration-200 ease-out md:block ${
+          isHovered ? "translate-x-0 opacity-100" : "translate-x-2 opacity-0"
         }`}
-        style={{ height: "120px" }}>
+        style={{ height: "120px" }}
+      >
         {isLoading ? (
-          <div className='h-[120px] w-40 bg-neutral-100 dark:bg-neutral-800 rounded-xl animate-pulse flex items-center justify-center'>
-            <div className='size-6 border-2 border-neutral-300 dark:border-neutral-600 border-t-transparent rounded-full animate-spin' />
+          <div className="flex h-[120px] w-40 animate-pulse items-center justify-center rounded-xl bg-neutral-100 dark:bg-neutral-800">
+            <div className="size-6 animate-spin rounded-full border-2 border-neutral-300 border-t-transparent dark:border-neutral-600" />
           </div>
         ) : ogImage ? (
           <img
             src={ogImage}
             alt={`${favorite.name} preview`}
-            className='h-[120px] w-auto max-w-60 object-contain rounded-xl border border-border bg-card shadow-xl'
+            className="border-border bg-card h-[120px] w-auto max-w-60 rounded-xl border object-contain shadow-xl"
           />
         ) : null}
       </div>
 
       <a
         href={favorite.url}
-        target='_blank'
+        target="_blank"
         rel={`noopener noreferrer${favorite.nofollow === false ? "" : " nofollow"}`}
-        className='flex gap-4 items-center relative shrink-0 w-full group py-2'
+        className="group relative flex w-full shrink-0 items-center gap-4 py-2"
         onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}>
-        <div className='basis-0 flex gap-4 grow items-center min-h-px min-w-px relative shrink-0'>
-          <div className='relative shrink-0 size-5 flex items-center justify-center rounded overflow-hidden bg-foreground/5'>
+        onMouseLeave={handleMouseLeave}
+      >
+        <div className="relative flex min-h-px min-w-px shrink-0 grow basis-0 items-center gap-4">
+          <div className="bg-foreground/5 relative flex size-5 shrink-0 items-center justify-center overflow-hidden rounded">
             <img
               alt={`${favorite.name} favicon`}
-              className='max-w-none object-cover pointer-events-none size-4'
+              className="pointer-events-none size-4 max-w-none object-cover"
               src={getFaviconUrl(favorite.url)}
               onError={(e) => {
                 // Hide if favicon fails to load
-                (e.target as HTMLImageElement).style.display = 'none';
+                (e.target as HTMLImageElement).style.display = "none";
               }}
             />
           </div>
-          <div className='basis-0 flex flex-wrap gap-x-2 gap-y-0.5 grow items-baseline min-h-px min-w-px relative shrink-0'>
-            <p className='font-semibold relative shrink-0 text-foreground text-sm text-justify whitespace-pre group-hover:underline underline-offset-4'>
+          <div className="relative flex min-h-px min-w-px shrink-0 grow basis-0 flex-wrap items-baseline gap-x-2 gap-y-0.5">
+            <p className="text-foreground relative shrink-0 text-justify text-sm font-semibold whitespace-pre underline-offset-4 group-hover:underline">
               {favorite.name}
             </p>
-            <p className='relative shrink-0 text-xs text-justify text-nowrap text-foreground/40 whitespace-pre hidden sm:block'>
+            <p className="text-foreground/40 relative hidden shrink-0 text-justify text-xs text-nowrap whitespace-pre sm:block">
               /
             </p>
-            <p className='[white-space-collapse:collapse] basis-0 grow min-h-px min-w-px overflow-ellipsis overflow-hidden relative shrink-0 text-foreground/70 text-sm text-justify text-nowrap'>
+            <p className="text-foreground/70 relative min-h-px min-w-px shrink-0 grow basis-0 overflow-hidden text-justify text-sm text-nowrap overflow-ellipsis [white-space-collapse:collapse]">
               {favorite.description}
             </p>
           </div>
         </div>
-        <p className='hidden sm:block relative shrink-0 text-xs text-nowrap text-foreground/40 whitespace-pre font-mono'>
+        <p className="text-foreground/40 relative hidden shrink-0 font-mono text-xs text-nowrap whitespace-pre sm:block">
           {getDomain(favorite.url)}
         </p>
       </a>
@@ -321,14 +351,14 @@ function FavoritesList({
 
   if (filteredFavorites.length === 0) {
     return (
-      <div className='flex items-center justify-center py-8 w-full'>
-        <p className='text-sm text-foreground/50'>No favorites found</p>
+      <div className="flex w-full items-center justify-center py-8">
+        <p className="text-foreground/50 text-sm">No favorites found</p>
       </div>
     );
   }
 
   return (
-    <div className='flex flex-col items-start relative shrink-0 w-full isolate divide-y divide-border/40'>
+    <div className="divide-border/40 relative isolate flex w-full shrink-0 flex-col items-start divide-y">
       {filteredFavorites.map((favorite) => (
         <FavoriteItem
           key={favorite.id}
@@ -343,17 +373,19 @@ function FavoritesList({
 
 export default function FavoritesPage() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<FilterCategory>("All");
+  const [selectedCategory, setSelectedCategory] =
+    useState<FilterCategory>("All");
 
   return (
     <Container className="min-h-screen pb-20">
       <Subheading className="mt-4">Favorites</Subheading>
       <p className="text-foreground pt-4 text-base">
-        A curated collection of beautifully designed products, inspiring people, and websites that have caught my attention.
+        A curated collection of beautifully designed products, inspiring people,
+        and websites that have caught my attention.
       </p>
 
-      <div className="mt-12 flex flex-col w-full relative">
-        <div className='w-full relative z-50'>
+      <div className="relative mt-12 flex w-full flex-col">
+        <div className="relative z-50 w-full">
           <SearchAndFilters
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
@@ -361,8 +393,11 @@ export default function FavoritesPage() {
             setSelectedCategory={setSelectedCategory}
           />
         </div>
-        <div className='w-full relative z-10'>
-          <FavoritesList searchQuery={searchQuery} selectedCategory={selectedCategory} />
+        <div className="relative z-10 w-full">
+          <FavoritesList
+            searchQuery={searchQuery}
+            selectedCategory={selectedCategory}
+          />
         </div>
       </div>
     </Container>
