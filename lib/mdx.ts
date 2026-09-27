@@ -4,8 +4,22 @@ import matter from "gray-matter";
 import path from "path";
 import readingTime from "reading-time";
 import { serialize } from "next-mdx-remote/serialize";
+import rehypePrettyCode from "rehype-pretty-code";
 
 const root = process.cwd();
+
+const mdxOptions = {
+  rehypePlugins: [
+    [
+      rehypePrettyCode,
+      {
+        theme: { light: "github-light", dark: "github-dark" },
+        keepBackground: false,
+        defaultLang: { block: "plaintext" },
+      },
+    ],
+  ],
+};
 
 export async function getFiles(type) {
   return fs.readdirSync(path.join(root, "data", type));
@@ -22,7 +36,7 @@ export async function getFileBySlug(type, slug) {
     .replace(/<\/HighlightBox>\s+([^\n])/g, "</HighlightBox>\n\n$1");
   let mdxSource;
   try {
-    mdxSource = await serialize(normalizedContent);
+    mdxSource = await serialize(normalizedContent, { mdxOptions });
   } catch {
     mdxSource = await serialize(
       "This article has legacy MDX syntax that needs migration.",

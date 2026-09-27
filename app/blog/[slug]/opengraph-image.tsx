@@ -7,13 +7,18 @@ export const alt = 'Hrushabh Kale - Blog Post';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
-export default async function Image({ params }: { params: { slug: string } }) {
+export default async function Image({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
   let title = 'Blog Post';
   let dateStr = '';
 
   try {
     const source = fs.readFileSync(
-      path.join(process.cwd(), 'data/blog', `${params.slug}.mdx`),
+      path.join(process.cwd(), 'data/blog', `${slug}.mdx`),
       'utf8'
     );
     const { data } = matter(source);
@@ -97,7 +102,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
                   fontWeight: 'bold',
                 }}
               >
-                — {dateStr}
+                {`— ${dateStr}`}
               </div>
             )}
           </div>
